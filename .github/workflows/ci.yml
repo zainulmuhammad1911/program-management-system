@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # NOTE: Nilai berikut adalah placeholder, bukan kredensial nyata — cukup
+    # agar Next.js tidak gagal saat membaca process.env saat build.
+    # TODO: setelah repository dipublikasikan ke GitHub, pindahkan nilai ini
+    # ke GitHub Secrets (Settings > Secrets and variables > Actions) dan
+    # referensikan lewat ${{ secrets.NAMA_SECRET }} di sini.
+    env:
+      DATABASE_URL: "postgresql://pms:pms@localhost:5432/pms_dev?schema=public"
+      AUTH_SECRET: "ci-placeholder-secret-not-for-production"
+      AUTH_GOOGLE_ID: "ci-placeholder-client-id"
+      AUTH_GOOGLE_SECRET: "ci-placeholder-client-secret"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
