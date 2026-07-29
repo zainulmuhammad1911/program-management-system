@@ -1,5 +1,12 @@
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authConfig } from "@/lib/auth.config";
+
+// Instance NextAuth TERPISAH dari lib/auth.ts — hanya memakai config edge-safe
+// (tanpa callback yang menyentuh Prisma). Mendekode JWT yang sama tetap valid
+// karena keduanya berbagi AUTH_SECRET & strategi session yang sama; middleware
+// hanya perlu tahu "ada session atau tidak", bukan menjalankan logic DB.
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;

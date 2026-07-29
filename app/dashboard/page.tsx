@@ -12,6 +12,9 @@ export default async function DashboardPage() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-4">
       <h1 className="text-2xl font-semibold">Dashboard (placeholder)</h1>
       <p>Login sebagai: {session.user?.email}</p>
+      <p className="text-sm text-neutral-500">
+        Role global: {session.user?.role ?? "(tidak ada)"}
+      </p>
       <form
         action={async () => {
           "use server";

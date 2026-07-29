@@ -1,18 +1,20 @@
 import { DefaultSession } from "next-auth";
+import { GlobalRole } from "@/lib/generated/prisma/client";
 
-// Module augmentation kosong untuk T0.3.
-// Sprint 1 (T1.x) akan menambah field di sini (mis. userId, role)
-// setelah model User & role tersedia — tanpa mengubah pondasi ini.
+// Module augmentation — diisi T1.2 setelah model User & GlobalRole tersedia.
 
 declare module "next-auth" {
   interface Session {
-    user: DefaultSession["user"];
+    user: DefaultSession["user"] & {
+      id: string;
+      role: GlobalRole | null;
+    };
   }
 }
 
 declare module "next-auth/jwt" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- kerangka untuk Sprint 1
   interface JWT {
-    // Klaim tambahan ditambahkan di Sprint 1.
+    userId?: string;
+    role?: GlobalRole | null;
   }
 }

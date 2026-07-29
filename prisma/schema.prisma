@@ -34,6 +34,13 @@ model User {
   isActive          Boolean     @default(true) @map("is_active")
   lastLoginAt       DateTime?   @map("last_login_at")
   createdAt         DateTime    @default(now()) @map("created_at")
+  /// Merepresentasikan perubahan APA PUN pada record User — termasuk saat
+  /// login hanya memperbarui lastLoginAt tanpa perubahan profil apapun.
+  /// Ini disengaja, bukan bug: Prisma menstempel ulang @updatedAt pada
+  /// setiap update(), apa pun field yang ditulis. Jika suatu saat dibutuhkan
+  /// pelacakan "kapan profil terakhir berubah" secara terpisah dari aktivitas
+  /// login, tambahkan field baru (mis. profileUpdatedAt) — jangan mengubah
+  /// makna updatedAt ini.
   updatedAt         DateTime    @updatedAt @map("updated_at")
 
   programAssignments ProgramAssignment[]
