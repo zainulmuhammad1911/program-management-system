@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import type { GlobalRole } from "@/lib/generated/prisma/client";
 import { authConfig } from "@/lib/auth.config";
 import {
   recordSuccessfulLogin,
@@ -10,6 +9,12 @@ import {
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   callbacks: {
+    // `session` sengaja TIDAK didefinisikan ulang di sini — dipakai dari
+    // authConfig.callbacks (lihat lib/auth.config.ts) via spread di bawah,
+    // supaya middleware.ts (yang hanya memakai authConfig) menghasilkan
+    // shape session yang identik dengan auth() di sini.
+    ...authConfig.callbacks,
+
     async signIn({ profile }) {
       if (!profile?.sub || !profile.email) return false;
 
@@ -36,12 +41,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.role = user.role;
       }
       return token;
-    },
-
-    session({ session, token }) {
-      session.user.id = token.userId as string;
-      session.user.role = token.role as GlobalRole | null;
-      return session;
     },
 
     redirect({ url, baseUrl }) {
