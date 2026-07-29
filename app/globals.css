@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------
+ * Design tokens — Brand Guideline TRI (satu-satunya sumber kebenaran visual)
+ * Primary: TRI Red. Secondary: Dark Red. Netral: putih/hitam/abu-abu.
+ * Merah HANYA untuk: primary button, active/selected state, badge penting,
+ * progress, link penting — background dashboard tetap dominan putih/abu-abu.
+ * ------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #f70e4f; /* TRI Red */
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #b10e3f; /* Dark Red */
+  --color-secondary-foreground: #ffffff;
+
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-muted: #f4f4f5; /* gray-100 */
+  --color-muted-foreground: #6b7280; /* gray-500 */
+  --color-border: #e5e7eb; /* gray-200 */
+  --color-surface: #fafafa; /* gray-50 */
+
+  --color-destructive: #b10e3f; /* Dark Red — beda dari Primary agar tidak rancu dengan CTA utama */
+  --color-destructive-foreground: #ffffff;
+  --color-success: #16a34a;
+  --color-success-foreground: #ffffff;
+
+  --color-ring: #f70e4f;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-border: var(--color-border);
+  --color-surface: var(--color-surface);
+  --color-destructive: var(--color-destructive);
+  --color-destructive-foreground: var(--color-destructive-foreground);
+  --color-success: var(--color-success);
+  --color-success-foreground: var(--color-success-foreground);
+  --color-ring: var(--color-ring);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
 }
