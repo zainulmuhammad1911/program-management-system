@@ -11,3 +11,51 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum GlobalRole {
+  ADMIN
+}
+
+enum ProgramRole {
+  PROGRAM_MANAGER
+  PROGRAM_OFFICER
+}
+
+model User {
+  id                String      @id @default(uuid())
+  email             String      @unique
+  name              String?
+  image             String?
+  providerAccountId String?     @unique @map("provider_account_id")
+  /// Hanya untuk Global Administrator (ADMIN). Seluruh role operasional
+  /// (Program Manager / Program Officer) berada di ProgramAssignment.roleInProgram,
+  /// bukan di sini — lihat catatan desain pada model ProgramAssignment.
+  role              GlobalRole?
+  isActive          Boolean     @default(true) @map("is_active")
+  lastLoginAt       DateTime?   @map("last_login_at")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+
+  programAssignments ProgramAssignment[]
+
+  @@map("users")
+}
+
+// NOTE: `programId` sengaja tanpa relasi ke model Program (belum ada di T1.1).
+// Relasi + FK constraint ditambahkan di T2.4 setelah model Program dibuat (T2.1).
+model ProgramAssignment {
+  id            String      @id @default(uuid())
+  userId        String      @map("user_id")
+  /// Scalar field, BUKAN relasi — model Program belum ada pada T1.1.
+  /// Foreign key ke Program akan ditambahkan pada T2.4 (setelah T2.1 membuat model Program).
+  programId     String      @map("program_id")
+  roleInProgram ProgramRole @map("role_in_program")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, programId])
+  @@index([programId])
+  @@map("program_assignments")
+}
